@@ -1,0 +1,16 @@
+{
+    "files.associations": {
+        "iostream": "cpp",
+        "cmath": "cpp",
+        "vector": "cpp",
+        "array": "cpp",
+        "optional": "cpp",
+        "tuple": "cpp",
+        "*.tcc": "cpp",
+        "bitset": "cpp",
+        "random": "cpp",
+        "valarray": "cpp",
+        "ostream": "cpp",
+        "numeric": "cpp"
+    }
+}
