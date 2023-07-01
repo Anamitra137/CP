@@ -8,6 +8,7 @@ int t[400040];
 void build(int idx, int l, int r){
     if(l == r) {
         t[idx] = a[l];
+        return;
     }
 
     int mid = (l + r)/2;
@@ -19,6 +20,11 @@ void build(int idx, int l, int r){
 
 void update(int idx, int l, int r, int pos, int val){
     if(pos < l || r < pos) return;
+    if(l == r){
+        t[idx] = val;
+        a[l] = val;
+        return;
+    }
 
     int mid = (l + r)/2;
     update(idx*2, l, mid, pos, val);
