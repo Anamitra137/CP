@@ -1,63 +1,67 @@
 #include <bits/stdc++.h>
-#include <ext/pb_ds/assoc_container.hpp>
 
-using namespace __gnu_pbds;
+#define FF first
+#define SS second
+#define MP make_pair
+
 using namespace std;
 
-typedef tree<int, null_type, less<int>, rb_tree_tag,
-             tree_order_statistics_node_update>
-    indexed_set;
-#define iset indexed_set
-#define ll long long int
-#define ull unsigned long long int
-#define f first
-#define int ll
-#define s second
-#define rep(i, st, end) for (int i = st; i < end; i++)
-const int mod = 998244353;
+using ll = long long int;
 using ii = pair<int, int>;
 
-int dp[1000010];
+constexpr int MOD = 1e9+7;
 
-int n, m;
-
-int rec(int pos)
-{
-    if (pos == n)
-        return 1;
-
-    if (dp[pos] != -1)
-        return dp[pos];
-
-    int ans;
-    if (pos == n - 1)
-    {
-        return m - 2;
+int rec(int floors, int eggs, vector<vector<int>>& dp){
+    if(eggs == 1){
+        return floors;
     }
-    else
-    {
-        ans = ((m - 1) * rec(pos + 1) % mod);
+    if(floors <= 2 && floors >= 0){
+        return floors;
     }
-
-    return dp[pos] = ans;
+    if(floors < 0){
+        return 1e9;
+    }
+    
+    if(dp[floors][eggs] != -1) return dp[floors][eggs];
+    
+    int lo = 1, hi = floors;
+    int ans = -2;
+    while(lo <= hi){
+        int mid = (lo + hi)/2;
+        int moves = max(rec(mid-1, eggs-1, dp), rec(floors-mid, eggs, dp));
+        int movesl = max(rec(mid-2, eggs-1, dp), rec(floors-mid+1, eggs, dp));
+        int movesr = max(rec(mid, eggs-1, dp), rec(floors-mid-1, eggs, dp));
+        if(movesl >= moves && moves <= movesr){
+            ans = 1 + moves;
+            break;
+        }
+        else if(movesl < moves){
+            hi = mid-1;
+        }
+        else{
+            lo = mid+1;
+        }
+    }
+    
+    return dp[floors][eggs] = ans;
 }
 
-void solve()
-{
-    cin >> n >> m;
-    rep(i, 0, n + 5)
-        dp[i] = -1;
-
-    int ans = (m * rec(1)) % mod;
-    cout << ans << '\n';
+int dropegg(int A, int B) {
+    vector<vector<int>> dp(B+1, vector<int>(A+1, -1));
+    return rec(B, A, dp);
 }
 
-signed main()
-{
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
-    cout.tie(0);
+void solve(){
+    cout << dropegg(2, 36) << '\n';
+}
 
-    // int t; cin>>t; while(t--)
-    solve();
+int main(){
+    ios_base::sync_with_stdio(false);
+    cin.tie(0); cout.tie(0);
+
+    // int _t; cin >> _t;
+    // while(_t--)
+        solve();
+
+    return 0;
 }

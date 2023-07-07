@@ -2,53 +2,46 @@
 
 using namespace std;
 
-class Dsu {
-    private:
-    int n, set_size;
-    int *par, *rank;
+class Dsu{
+    using T = int;
+
+    T setsize, n;
+    T *par, *rank;
 
     public:
-    Dsu() = default;
-    Dsu(std::size_t sz) 
-    : n{sz}, set_size{sz}, par{new int[n+1]}, rank{new int[n+1]}
+    Dsu(T sz = 0)
+    : n{sz}, setsize{sz}, par{new T[sz+1]}, rank{new T[sz+1]}
     {
-        for(int i = 1; i <= n; i++) {
+        for(T i = 1; i <= n; ++i){
             par[i] = i;
             rank[i] = 1;
         }
     }
-
-    ~Dsu() {
+    ~Dsu(){
         delete[] par;
         delete[] rank;
     }
 
-    int find(int x) {
+    T find(T x){
         if(par[x] == x) return x;
         return par[x] = find(par[x]);
     }
 
-    int merge(int x, int y) {
-        int xp = find(x), yp = find(y);
-        if(xp == yp) return xp;
-        set_size--;
-        if(rank[xp] >= rank[yp]){
+    void merge(T x, T y){
+        T xp = find(x), yp = find(y);
+        if(xp != yp){
+            if(rank[xp] < rank[yp]) swap(xp, yp);
             par[yp] = xp;
             rank[xp] += rank[yp];
-            return xp;
-        }
-        else{
-            par[xp] = yp;
-            rank[yp] += rank[xp];
-            return yp;
+            --setsize;
         }
     }
 
-    int size() { return set_size; }
+    T size() { return setsize; }
 
     void reset(){
-        set_size = n;
-        for(int i = 1; i <= n; i++) {
+        setsize = n;
+        for(T i = 1; i <= n; ++i){
             par[i] = i;
             rank[i] = 1;
         }
